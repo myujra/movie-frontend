@@ -7,11 +7,14 @@
       </div>
       <button
         type="button"
-        class="btn btn-outline-danger"
+        class="btn btn-outline-success"
         v-on:click="addToFavorites"
         v-if="!favorite"
       >
         Añadir a mis películas
+      </button>
+      <button type="button" class="btn btn-outline-danger" v-on:click="removeFavorite" v-else>
+        Remover
       </button>
     </div>
   </div>
@@ -24,7 +27,9 @@ export default {
   props: {
     imdbID: { String },
     poster: { String },
-    favorite: { Boolean }
+    favoriteId: { Number },
+    favorite: { Boolean },
+    callbackFunction: { Function }
   },
   components: {
     DetailMovie
@@ -39,7 +44,7 @@ export default {
         )
         const data = responseMovie.data
 
-        const response = await axios.post(
+        await axios.post(
           url + '/favorites',
           {
             poster: data.Poster,
@@ -53,6 +58,13 @@ export default {
       } catch (error) {
         console.error('Error adding to favorites:', error.response.data.message)
       }
+    },
+    async removeFavorite() {
+      const token = localStorage.getItem('jwtToken')
+      await axios.delete(url + '/favorites/' + this.favoriteId, {
+        headers: { Authorization: token }
+      })
+      await this.callbackFunction()
     }
   }
 }

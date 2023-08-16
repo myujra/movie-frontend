@@ -4,7 +4,13 @@
     <hr />
     <div class="row">
       <div class="col-lg-3 col-md-4 mb-2 col-sm-6" v-for="(movie, index) in favorites" :key="index">
-        <CardMovie :poster="movie.poster" :imdbID="movie.imdbID" :favorite="true" />
+        <CardMovie
+          :poster="movie.poster"
+          :imdbID="movie.imdbID"
+          :favorite="true"
+          :favoriteId="movie.id"
+          :callbackFunction="getMovies"
+        />
       </div>
     </div>
   </div>
@@ -28,13 +34,25 @@ export default {
   },
   methods: {
     async getMovies() {
-      const token = localStorage.getItem('jwtToken')
-      let response = await axios.get(url + '/favorites', { headers: { Authorization: token } })
-      this.favorites = response.data
+      try {
+        const token = localStorage.getItem('jwtToken')
+        let response = await axios.get(url + '/favorites', { headers: { Authorization: token } })
+        this.favorites = response.data
+      } catch (error) {
+        this.$router.push('/')
+      }
     }
   },
   async created() {
     await this.getMovies()
+  },
+  beforeRouteEnter(to, from, next) {
+    const token = localStorage.getItem('jwtToken')
+    if (!token) {
+      next('/')
+    } else {
+      next()
+    }
   }
 }
 </script>
