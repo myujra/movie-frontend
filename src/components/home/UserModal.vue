@@ -17,7 +17,7 @@
           <button type="button" class="btn-close" aria-label="Close" @click="closeModal"></button>
         </div>
         <div class="modal-body">
-          <form @submit.prevent="register">
+          <form @submit.prevent="registerUser">
             <div class="mb-3">
               <label for="first_name" class="form-label">Nombre</label>
               <input
@@ -75,7 +75,7 @@ export default {
     this.loginModal = new Modal(document.getElementById('modal_register'))
   },
   methods: {
-    async register() {
+    async registerUser() {
       const user = {
         first_name: this.first_name,
         last_name: this.last_name,
@@ -88,9 +88,17 @@ export default {
     },
     openModal() {
       this.loginModal.show()
+      this.cleanForm()
     },
     closeModal() {
       this.loginModal.hide()
+      this.cleanForm()
+    },
+    cleanForm() {
+      this.first_name = ''
+      this.last_name = ''
+      this.username = ''
+      this.password = ''
     }
   }
 }

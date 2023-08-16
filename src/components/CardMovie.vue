@@ -5,10 +5,14 @@
       <div class="mb-2">
         <DetailMovie :poster="poster" :imdbID="imdbID" />
       </div>
-      <button type="button" class="btn btn-outline-danger" v-on:click="addToFavorites">
+      <button
+        type="button"
+        class="btn btn-outline-danger"
+        v-on:click="addToFavorites"
+        v-if="!favorite"
+      >
         Añadir a mis películas
       </button>
-      <!-- <a href="#" class="btn btn-outline-secondary">Añadir a mis películas</a> -->
     </div>
   </div>
 </template>
@@ -19,7 +23,8 @@ const url = 'http://localhost:3000/api/movies'
 export default {
   props: {
     imdbID: { String },
-    poster: { String }
+    poster: { String },
+    favorite: { Boolean }
   },
   components: {
     DetailMovie
@@ -45,9 +50,6 @@ export default {
           },
           { headers: { Authorization: token } }
         )
-        console.log(response)
-        // this.newMovieTitle = ''
-        // this.loadFavoriteMovies()
       } catch (error) {
         console.error('Error adding to favorites:', error.response.data.message)
       }

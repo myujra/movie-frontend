@@ -11,7 +11,7 @@
 
     <div class="row">
       <div class="col-lg-3 col-md-4 mb-2 col-sm-6" v-for="(movie, index) in movies" :key="index">
-        <CardMovie :poster="movie.Poster" :imdbID="movie.imdbID"> </CardMovie>
+        <CardMovie :poster="movie.Poster" :imdbID="movie.imdbID" :favorite="false"> </CardMovie>
       </div>
     </div>
   </div>
