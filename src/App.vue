@@ -3,6 +3,26 @@ import { RouterLink, RouterView } from 'vue-router'
 import axios from 'axios'
 import LoginModal from './components/home/LoginModal.vue'
 import UserModal from './components/home/UserModal.vue'
+
+import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const isAuthenticated = ref(false)
+const route = useRoute()
+const router = useRouter()
+
+const checkAuthentication = () => {
+  const token = localStorage.getItem('jwtToken')
+  isAuthenticated.value = !!token
+}
+
+const logout = () => {
+  localStorage.removeItem('jwtToken')
+  router.push('/')
+  window.location.reload()
+}
+
+checkAuthentication()
 </script>
 
 <template>
@@ -35,14 +55,19 @@ import UserModal from './components/home/UserModal.vue'
             <li class="nav-item">
               <router-link to="/" class="nav-link"> Inicio </router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="isAuthenticated">
               <router-link to="/favoritos" class="nav-link"> Favoritos </router-link>
             </li>
           </ul>
         </div>
         <div class="btn-group" role="group">
-          <LoginModal />
-          <UserModal />
+          <template v-if="!isAuthenticated">
+            <LoginModal />
+            <UserModal />
+          </template>
+          <template v-else>
+            <button class="btn btn-dark" @click="logout">Cerrar Sesión</button>
+          </template>
         </div>
       </div>
     </nav>

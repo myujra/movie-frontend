@@ -76,6 +76,8 @@ export default {
       localStorage.setItem('jwtToken', token)
 
       this.closeModal()
+
+      window.location.reload()
     },
     cleanForm() {
       this.username = ''
